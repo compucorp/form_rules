@@ -25,3 +25,6 @@ $conf['base_field_key_2_(x+1)'] = 'xxxx';
 $conf['multiplier_field_key_1_(x+1)'] = 'xxxx';
 $conf['multiplier_field_key_2_(x+1)'] = 'xxxx';
 $conf['destination_field_key_(x+1)'] = 'xxxx';
+
+================
+Please notice that same fields in a webform should not be used more than once.
