@@ -7,20 +7,20 @@ function form_rules_form_alter(&$form, &$form_state, $form_id) {
   if(variable_get('checking_form_number', '')){
     $count = variable_get('checking_form_number', '');
   }
-  for ($i=0; $i < $count; $i++) { 
-    if(variable_get('calculation_form_id'.$i, '') == $form_id){
+  for ($i=0; $i <= $count; $i++) { 
+    if(variable_get('calculation_form_id_'.$i, '') == $form_id){
       $match_form_id = $i;
     }
   }
   
   if(!is_null($match_form_id)){
 
-    $calculation_form_id = variable_get('calculation_form_id'.$match_form_id, '');
-    $base_field_key_1 = variable_get('base_field_key_1'.$match_form_id, '');
-    $base_field_key_2 = variable_get('base_field_key_2'.$match_form_id, '');
-    $multiplier_field_key_1 = variable_get('multiplier_field_key_1'.$match_form_id, '');
-    $multiplier_field_key_2 = variable_get('multiplier_field_key_2'.$match_form_id, '');
-    $destination_field_key = variable_get('destination_field_key'.$match_form_id, '');
+    $calculation_form_id = variable_get('calculation_form_id_'.$match_form_id, '');
+    $base_field_key_1 = variable_get('base_field_key_1_'.$match_form_id, '');
+    $base_field_key_2 = variable_get('base_field_key_2_'.$match_form_id, '');
+    $multiplier_field_key_1 = variable_get('multiplier_field_key_1_'.$match_form_id, '');
+    $multiplier_field_key_2 = variable_get('multiplier_field_key_2_'.$match_form_id, '');
+    $destination_field_key = variable_get('destination_field_key_'.$match_form_id, '');
 
     $param_keys = array($base_field_key_1, $base_field_key_2, $multiplier_field_key_1, $multiplier_field_key_2);
     $resultKey = NULL;
