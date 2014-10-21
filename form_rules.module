@@ -7,12 +7,12 @@ function form_rules_form_alter(&$form, &$form_state, $form_id) {
   if(variable_get('checking_form_number', '')){
     $count = variable_get('checking_form_number', '');
   }
-  for ($i=0; $i <= $count; $i++) { 
+  for ($i=1; $i <= $count; $i++) {
     if(variable_get('calculation_form_id_'.$i, '') == $form_id){
       $match_form_id = $i;
     }
   }
-  
+
   if(!is_null($match_form_id)){
 
     $calculation_form_id = variable_get('calculation_form_id_'.$match_form_id, '');
@@ -22,10 +22,12 @@ function form_rules_form_alter(&$form, &$form_state, $form_id) {
     $multiplier_field_key_2 = variable_get('multiplier_field_key_2_'.$match_form_id, '');
     $destination_field_key = variable_get('destination_field_key_'.$match_form_id, '');
 
-    $param_keys = array($base_field_key_1, $base_field_key_2, $multiplier_field_key_1, $multiplier_field_key_2);
+    $param_keys_1 = array($base_field_key_1, $multiplier_field_key_1);
+    $param_keys_2 = array($base_field_key_2, $multiplier_field_key_2);
     $resultKey = NULL;
     $params = array();
-    $count = 0;
+    $countNum1 = 0;
+    $countNum2 = 0;
 
     if ($form_id == $calculation_form_id && isset($form_state['storage'])) {
       $components = $form_state['storage']['component_tree']['children'];
@@ -33,10 +35,15 @@ function form_rules_form_alter(&$form, &$form_state, $form_id) {
       foreach ($components as $key => $value) {
         if (isset($value['children'])) {
           foreach ($value['children'] as $k => $v) {
-            if (in_array($v['form_key'], $param_keys)) {
+            if (in_array($v['form_key'], $param_keys_1)) {
               if (isset($submissions[$k])) {
                 $params[$v['form_key']] = $submissions[$k];
-                $count++;
+                $countNum1++;
+              }
+            } else if (in_array($v['form_key'], $param_keys_2)) {
+              if (isset($submissions[$k])) {
+                $params[$v['form_key']] = $submissions[$k];
+                $countNum2++;
               }
             } else if ($v['form_key'] == $destination_field_key) {
               $resultKey = $k;
@@ -44,10 +51,15 @@ function form_rules_form_alter(&$form, &$form_state, $form_id) {
           }
         }
         else {
-          if (in_array($value['form_key'], $param_keys)) {
+          if (in_array($value['form_key'], $param_keys_1)) {
             if (isset($submissions[$key])) {
               $params[$value['form_key']] = $submissions[$key];
-              $count++;
+              $countNum1++;
+            }
+          } else if (in_array($v['form_key'], $param_keys_2)) {
+            if (isset($submissions[$key])) {
+              $params[$v['form_key']] = $submissions[$key];
+              $countNum2++;
             }
           } else if ($value['form_key'] == $destination_field_key) {
             $resultKey = $key;
@@ -55,7 +67,7 @@ function form_rules_form_alter(&$form, &$form_state, $form_id) {
         }
       }
 
-      if (!is_null($resultKey) && $count == 4) {
+      if (!is_null($resultKey) && ($countNum1 == 2 || $countNum2 == 2)) {
         $result = $params[$base_field_key_1] * $params[$multiplier_field_key_1] + $params[$base_field_key_2] * $params[$multiplier_field_key_2];
         $form['submitted'][$destination_field_key]['#default_value'] = (string)$result;
       }
