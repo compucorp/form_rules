@@ -56,9 +56,9 @@ function form_rules_form_alter(&$form, &$form_state, $form_id) {
               $params[$value['form_key']] = $submissions[$key];
               $countNum1++;
             }
-          } else if (in_array($v['form_key'], $param_keys_2)) {
+          } else if (in_array($value['form_key'], $param_keys_2)) {
             if (isset($submissions[$key])) {
-              $params[$v['form_key']] = $submissions[$key];
+              $params[$value['form_key']] = $submissions[$key];
               $countNum2++;
             }
           } else if ($value['form_key'] == $destination_field_key) {
